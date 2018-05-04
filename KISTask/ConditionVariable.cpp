@@ -1,25 +1,25 @@
 #include "stdafx.h"
+#include "ApiWrapper.h"
 #include "ConditionVariable.h"
 
 ConditionVariable::ConditionVariable()
 {
-	ApiWrapper(mEvent = CreateEvent(NULL, FALSE, FALSE, NULL));
-
+	ApiWrapper((mEvent = CreateEvent(NULL, FALSE, FALSE, NULL)) != NULL);
 }
 
 ConditionVariable::~ConditionVariable()
 {
-	CloseHandler(mEvent);
+	CloseHandle(mEvent);
 }
 
 void ConditionVariable::NotifyAll()
 {
-	SetEvent(mEvent);
+	ApiWrapper(SetEvent(mEvent));
 }
 
-bool ConditionVariable::wait(UniqueLock<Mutex>& aLock)
+bool ConditionVariable::Wait()
 {
-	auto result = WAIT_OBJECT_0 == WaitForSingleObject(mEvent, INFINITE);
-	aLock.Unlock();
-	return result;
+	DWORD res = WaitForSingleObject(mEvent, INFINITE);
+	ApiWrapper(res != WAIT_FAILED);
+	return WAIT_OBJECT_0 == res;
 }

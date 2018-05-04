@@ -2,17 +2,17 @@
 
 Mutex::Mutex()
 {
-	mMutex = CreateMutex(NULL, FALSE, NULL);
+	ApiWrapper((mMutex = CreateMutex(NULL, FALSE, NULL)) != NULL);
 }
 
 void Mutex::Lock()
 {
-	auto result = WaitForSingleObject(mMutex, INFINITE);
+	ApiWrapper(WAIT_FAILED != WaitForSingleObject(mMutex, INFINITE));
 }
 
 void Mutex::Unlock()
 {
-	ReleaseMutex(mMutex);
+	ApiWrapper(ReleaseMutex(mMutex));
 }
 
 Mutex::~Mutex()

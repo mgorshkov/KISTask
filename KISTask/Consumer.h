@@ -7,6 +7,8 @@ public:
 
 	void Consume(const Task& aTask) override;
 
+	void Clear(const Task& aTask) override;
+
 private:
 	IStopperPtr mStopper;
 };

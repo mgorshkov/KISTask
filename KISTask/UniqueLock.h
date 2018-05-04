@@ -6,28 +6,36 @@ class UniqueLock
 public:
 	explicit UniqueLock(M& aMutex)
 		: mMutex(&aMutex)
+		, mOwns(false)
 	{
 		mMutex->Lock();
+		mOwns = true;
 	}
 
 	~UniqueLock()
 	{
-		mMutex->Unlock();
+		if (mOwns)
+			mMutex->Unlock();
 	}
 
 	UniqueLock(UniqueLock&& aOther)
 		: mMutex(aOther.mMutex)
+		, mOwns(aOther.mOwns)
 	{
 		aOther.mMutex = 0;
+		aOther.mOwns = false;
 	}
 
 	UniqueLock& operator = (UniqueLock&& aOther)
 	{
 		if (this != &aOther)
 		{
-			mMutex->Unlock();
+			if (mOwns)
+				mMutex->Unlock();
 			mMutex = aOther.mMutex;
+			mOwns = aOther.mOwns;
 			aOther.mMutex = nullptr;
+			aOther.mOwns = false;	
 		}
 		return *this;
 	}
@@ -38,8 +46,10 @@ public:
 	void Unlock()
 	{
 		mMutex->Unlock();
+		mOwns = false;
 	}
 
 private:
 	M* mMutex;
+	bool mOwns;
 };

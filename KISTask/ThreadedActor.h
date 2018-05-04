@@ -16,13 +16,13 @@ public:
 
 	virtual ~ThreadedActor();
 
-	virtual void Run() = 0;
-
 	void Start();
 
 	void Stop();
 
 protected:
+	virtual void Run() = 0;
+
 	std::queue<Task> mQueue;
 	ConditionVariable mCondition;
 	Mutex mQueueMutex;

@@ -39,13 +39,13 @@ void ThreadedActor::ThreadProc(ThreadedActor* aThis, const std::string& aThreadP
 {
 	try
 	{
-		std::cout << "Thread " << aThreadPrefix << " started.";
+		std::cout << "Thread " << aThreadPrefix << " started." << std::endl;
 		aThis->Run();
-		std::cout << "Thread " << aThreadPrefix << " stopped.";
+		std::cout << "Thread " << aThreadPrefix << " stopped." << std::endl;
 	}
 	catch (const std::exception &e)
 	{
-		std::cout << "Thread " << aThreadPrefix << " errored.";
+		std::cout << "Thread " << aThreadPrefix << " failed." << std::endl;
 		std::cerr << e.what() << std::endl;
 	}
 }

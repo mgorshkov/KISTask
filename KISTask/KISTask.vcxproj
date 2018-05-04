@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ApiWrapper.h" />
     <ClInclude Include="ConditionVariable.h" />
     <ClInclude Include="Consumer.h" />
     <ClInclude Include="Defines.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="UniqueLock.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApiWrapper.cpp" />
     <ClCompile Include="ConditionVariable.cpp" />
     <ClCompile Include="Consumer.cpp" />
     <ClCompile Include="Main.cpp" />

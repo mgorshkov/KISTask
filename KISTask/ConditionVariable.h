@@ -14,7 +14,7 @@ public:
 
 	void NotifyAll();
 
-	bool wait(UniqueLock<Mutex>& aLock);
+	bool Wait();
 
 private:
 	HANDLE mEvent;
