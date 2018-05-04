@@ -33,7 +33,7 @@ protected:
 		}
 		while (!queue.empty())
 		{
-			const auto& task = queue.front();
+			auto task = queue.front();
 			queue.pop();
 			aDependentConsumer.Consume(task);
 		}
