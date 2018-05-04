@@ -17,6 +17,8 @@ protected:
 		while (!mSynchronizer.mStopper->IsStopped())
 		{
 			auto task = dependentProducer.Produce();
+			if (task == nullptr)
+				break; // stop detected inside producer
 			{
 				UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
 				mSynchronizer.mQueue.push(task);
