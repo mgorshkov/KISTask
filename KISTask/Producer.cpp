@@ -8,6 +8,6 @@ Producer::Producer(IStopperPtr aStopper)
 TaskPtr Producer::Produce() const
 {
 	auto request = Original::GetRequest(mStopper);
-	return request ? std::make_shared<Task>(request) : nullptr;
+	return std::make_unique<Task>(request);
 }
 

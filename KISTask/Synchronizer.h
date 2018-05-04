@@ -9,6 +9,8 @@ struct Synchronizer
 {
 	Synchronizer(IStopperPtr aStopper);
 
+	void Stop();
+
 	TaskQueue mQueue;
 	ConditionVariable mCondition;
 	Mutex mQueueMutex;

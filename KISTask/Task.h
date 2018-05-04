@@ -19,6 +19,6 @@ struct Task
 	Original::Request* mRequest;
 };
 
-using TaskPtr = std::shared_ptr<Task>;
+using TaskPtr = std::unique_ptr<Task>;
 using TaskQueue = std::queue<TaskPtr>;
 

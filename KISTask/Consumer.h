@@ -5,7 +5,7 @@ class Consumer : public IConsumer
 public:
 	Consumer(IStopperPtr aStopper);
 
-	void Consume(const TaskPtr& aTask) override;
+	void Consume(TaskPtr&& aTask) override;
 
 private:
 	IStopperPtr mStopper;

@@ -16,12 +16,12 @@ protected:
 		DependentProducer dependentProducer(mSynchronizer.mStopper);
 		while (!mSynchronizer.mStopper->IsStopped())
 		{
-			auto task = dependentProducer.Produce();
+			TaskPtr task = dependentProducer.Produce();
 			if (task == nullptr)
-				break; // stop detected inside producer
+				break; // stop has been detected inside producer
 			{
 				UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
-				mSynchronizer.mQueue.push(task);
+				mSynchronizer.mQueue.emplace(std::move(task));
 			}
 			mSynchronizer.mCondition.NotifyAll();
 		}

@@ -8,13 +8,13 @@ ThreadedActor::ThreadedActor(Synchronizer& aSynchronizer, const std::string& aTh
 	: mSynchronizer(aSynchronizer)
 	, mThreadPrefix(aThreadPrefix)
 	, mThreadCount(aThreadCount)
-	, mIsStarted(false)
+	, mIsRunning(false)
 {
 }
 
 ThreadedActor::~ThreadedActor()
 {
-	if (mIsStarted)
+	if (mIsRunning)
 		std::cerr << "~ThreadedActor on running threads" << std::endl;
 }
 
@@ -26,19 +26,17 @@ void ThreadedActor::Start()
 		name << mThreadPrefix << i;
 		mThreads.emplace_back(std::thread(ThreadProc, this, name.str()));
 	}
-	mIsStarted = true;
+	mIsRunning = true;
 }
 
-void ThreadedActor::Stop()
+void ThreadedActor::Join()
 {
-	if (!mIsStarted)
+	if (!mIsRunning)
 		return;
-	mSynchronizer.mStopper->Stop();
-	mSynchronizer.mCondition.NotifyAll();
 	for (auto& thread : mThreads)
 		if (thread.joinable())
 			thread.join();
-	mIsStarted = false;
+	mIsRunning = false;
 }
 
 void ThreadedActor::ThreadProc(ThreadedActor* aThis, const std::string& aThreadPrefix)

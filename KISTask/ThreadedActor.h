@@ -13,7 +13,7 @@ public:
 	virtual ~ThreadedActor();
 
 	void Start();
-	void Stop();
+	void Join();
 
 protected:
 	virtual void Run() = 0;
@@ -25,7 +25,7 @@ private:
 
 	std::string mThreadPrefix;
 	int mThreadCount;
-	bool mIsStarted;
+	bool mIsRunning;
 
 	std::vector<std::thread> mThreads;
 };

@@ -33,9 +33,8 @@ protected:
 		}
 		while (!queue.empty())
 		{
-			auto task = queue.front();
+			aDependentConsumer.Consume(std::move(queue.front()));
 			queue.pop();
-			aDependentConsumer.Consume(task);
 		}
 	}
 };
