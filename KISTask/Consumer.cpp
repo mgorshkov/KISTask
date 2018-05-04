@@ -5,13 +5,8 @@ Consumer::Consumer(IStopperPtr aStopper)
 {
 }
 
-void Consumer::Consume(const Task& aTask)
+void Consumer::Consume(const TaskPtr& aTask)
 {
-	Original::ProcessRequest(aTask.mRequest, mStopper);
-}
-
-void Consumer::Clear(const Task& aTask)
-{
-	Original::DeleteRequest(aTask.mRequest);
+	Original::ProcessRequest(aTask->mRequest, mStopper);
 }
 

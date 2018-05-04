@@ -43,12 +43,6 @@ public:
 	UniqueLock(const UniqueLock&) = delete;
 	UniqueLock& operator = (const UniqueLock&) = delete;
 
-	void Unlock()
-	{
-		mMutex->Unlock();
-		mOwns = false;
-	}
-
 private:
 	M* mMutex;
 	bool mOwns;

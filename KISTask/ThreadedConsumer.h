@@ -1,5 +1,8 @@
 #pragma once
 
+#include "UniqueLock.h"
+#include "Mutex.h"
+
 template <typename DependentConsumer>
 class ThreadedConsumer : public ThreadedActor
 {
@@ -13,43 +16,26 @@ public:
 protected:
 	void Run() override
 	{
-		DependentConsumer dependentConsumer(mStopper);
-		while (!mStopper->IsStopped())
+		DependentConsumer dependentConsumer(mSynchronizer.mStopper);
+		while (!mSynchronizer.mStopper->IsStopped())
 		{
-			UniqueLock<Mutex> lk(mQueueMutex);
-			while (mQueue.empty() && !mStopper->IsStopped())
-				mCondition.Wait();
-			ProcessQueue(lk, dependentConsumer);
-		}
-		{
-			UniqueLock<Mutex> lk(mQueueMutex);
-			ClearQueue(lk, dependentConsumer);
+			mSynchronizer.mCondition.Wait();
+			ProcessQueue(dependentConsumer);
 		}
 	}
 
-	void ProcessQueue(UniqueLock<Mutex>& lk, IConsumer& aDependentConsumer)
+	void ProcessQueue(IConsumer& aDependentConsumer)
 	{
-		std::queue<Task> queue;
-		std::swap(mQueue, queue);
-		lk.Unlock();
+		TaskQueue queue;
+		{
+			UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
+			std::swap(mSynchronizer.mQueue, queue);
+		}
 		while (!queue.empty())
 		{
 			const auto& task = queue.front();
 			queue.pop();
 			aDependentConsumer.Consume(task);
-		}
-	}
-
-	void ClearQueue(UniqueLock<Mutex>& lk, IConsumer& aDependentConsumer)
-	{
-		std::queue<Task> queue;
-		std::swap(mQueue, queue);
-		lk.Unlock();
-		while (!queue.empty())
-		{
-			const auto& task = queue.front();
-			queue.pop();
-			aDependentConsumer.Clear(task);
 		}
 	}
 };

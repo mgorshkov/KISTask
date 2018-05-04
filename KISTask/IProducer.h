@@ -1,11 +1,11 @@
 #pragma once
 
-#include "defines.h"
+#include "Task.h"
 
 class IProducer
 {
 public:
 	virtual ~IProducer() = default;
-	virtual Task Produce() const = 0;
+	virtual TaskPtr Produce() const = 0;
 };
 

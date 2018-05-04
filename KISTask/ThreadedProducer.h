@@ -13,15 +13,15 @@ public:
 protected:
 	void Run() override
 	{
-		DependentProducer dependentProducer(mStopper);
-		while (!mStopper->IsStopped())
+		DependentProducer dependentProducer(mSynchronizer.mStopper);
+		while (!mSynchronizer.mStopper->IsStopped())
 		{
 			auto task = dependentProducer.Produce();
 			{
-				UniqueLock<Mutex> lk(mQueueMutex);
-				mQueue.push(task);
+				UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
+				mSynchronizer.mQueue.push(task);
 			}
-			mCondition.NotifyAll();
+			mSynchronizer.mCondition.NotifyAll();
 		}
 	}
 };

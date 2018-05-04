@@ -4,16 +4,18 @@
 #include <sstream>
 #include "ThreadedActor.h"
 
-ThreadedActor::ThreadedActor(const std::string& aThreadPrefix, IStopperPtr aStopper, int aThreadCount)
-	: mThreadPrefix(aThreadPrefix)
-	, mStopper(aStopper)
+ThreadedActor::ThreadedActor(Synchronizer& aSynchronizer, const std::string& aThreadPrefix, int aThreadCount)
+	: mSynchronizer(aSynchronizer)
+	, mThreadPrefix(aThreadPrefix)
 	, mThreadCount(aThreadCount)
+	, mIsStarted(false)
 {
 }
 
 ThreadedActor::~ThreadedActor()
 {
-	Stop();
+	if (mIsStarted)
+		std::cerr << "~ThreadedActor on running threads" << std::endl;
 }
 
 void ThreadedActor::Start()
@@ -24,15 +26,19 @@ void ThreadedActor::Start()
 		name << mThreadPrefix << i;
 		mThreads.emplace_back(std::thread(ThreadProc, this, name.str()));
 	}
+	mIsStarted = true;
 }
 
 void ThreadedActor::Stop()
 {
-	mStopper->Stop();
-	mCondition.NotifyAll();
+	if (!mIsStarted)
+		return;
+	mSynchronizer.mStopper->Stop();
+	mSynchronizer.mCondition.NotifyAll();
 	for (auto& thread : mThreads)
 		if (thread.joinable())
 			thread.join();
+	mIsStarted = false;
 }
 
 void ThreadedActor::ThreadProc(ThreadedActor* aThis, const std::string& aThreadPrefix)

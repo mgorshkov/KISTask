@@ -15,7 +15,7 @@ namespace Original
 		// payload
 		std::vector<int> v(1000);
 		std::iota(v.begin(), v.end(), 0);
-		for (int i = 0; i < 1000000; ++i)
+		for (int i = 0; i < 10000; ++i)
 		{
 			if (stopSignal->IsStopped())
 				return nullptr;
@@ -31,7 +31,7 @@ namespace Original
 		// payload
 		std::vector<int> v(1000);
 		std::iota(v.begin(), v.end(), 0);
-		for (int i = 0; i < 1000000; ++i)
+		for (int i = 0; i < 10000; ++i)
 		{
 			if (stopSignal->IsStopped())
 				return;

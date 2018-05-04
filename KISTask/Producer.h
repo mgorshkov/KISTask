@@ -5,7 +5,7 @@ class Producer : public IProducer
 public:
 	Producer(IStopperPtr aStopper);
 
-	Task Produce() const override;
+	TaskPtr Produce() const override;
 
 private:
 	IStopperPtr mStopper;

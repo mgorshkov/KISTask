@@ -1,38 +1,31 @@
 #pragma once
 
-#include <string>
-#include <queue>
-#include <thread>
+#include "Synchronizer.h"
 
-#include "Defines.h"
-#include "IStopper.h"
-#include "ConditionVariable.h"
-#include "Mutex.h"
+#include <string>
+#include <thread>
 
 class ThreadedActor
 {
 public:
-	ThreadedActor(const std::string& aThreadPrefix, IStopperPtr aStopper, int aThreadCount = 2);
+	ThreadedActor(Synchronizer& aSynchronizer, const std::string& aThreadPrefix, int aThreadCount = 2);
 
 	virtual ~ThreadedActor();
 
 	void Start();
-
 	void Stop();
 
 protected:
 	virtual void Run() = 0;
 
-	std::queue<Task> mQueue;
-	ConditionVariable mCondition;
-	Mutex mQueueMutex;
-	std::shared_ptr<IStopper> mStopper;
+	Synchronizer& mSynchronizer;
 
 private:
 	static void ThreadProc(ThreadedActor* aThis, const std::string& aThreadPrefix);
 
 	std::string mThreadPrefix;
 	int mThreadCount;
+	bool mIsStarted;
 
 	std::vector<std::thread> mThreads;
 };

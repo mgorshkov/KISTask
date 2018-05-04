@@ -5,9 +5,9 @@ Producer::Producer(IStopperPtr aStopper)
 {
 }
 
-Task Producer::Produce() const
+TaskPtr Producer::Produce() const
 {
 	auto request = Original::GetRequest(mStopper);
-	return Task{request};
+	return std::make_shared<Task>(request);
 }
 
