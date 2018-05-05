@@ -19,11 +19,8 @@ protected:
 			TaskPtr task = dependentProducer.Produce();
 			if (task == nullptr)
 				break; // stop has been detected inside producer
-			{
-				UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
-				mSynchronizer.mQueue.emplace(std::move(task));
-			}
-			mSynchronizer.mCondition.NotifyAll();
+
+			mSynchronizer.EnqueueTask(std::move(task));
 		}
 	}
 };

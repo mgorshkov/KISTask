@@ -17,20 +17,16 @@ protected:
 	void Run() override
 	{
 		DependentConsumer dependentConsumer(mSynchronizer.mStopper);
-		while (!mSynchronizer.mStopper->IsStopped())
+		while (!mSynchronizer.IsStopped())
 		{
-			mSynchronizer.mCondition.Wait();
+			mSynchronizer.Wait();
 			ProcessQueue(dependentConsumer);
 		}
 	}
 
 	void ProcessQueue(IConsumer& aDependentConsumer)
 	{
-		TaskQueue queue;
-		{
-			UniqueLock<Mutex> lk(mSynchronizer.mQueueMutex);
-			std::swap(mSynchronizer.mQueue, queue);
-		}
+		TaskQueue queue = mSynchronizer.GetQueue();
 		while (!queue.empty())
 		{
 			aDependentConsumer.Consume(std::move(queue.front()));

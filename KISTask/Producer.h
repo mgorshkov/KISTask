@@ -3,7 +3,7 @@
 class Producer : public IProducer
 {
 public:
-	Producer(IStopperPtr aStopper);
+	explicit Producer(IStopperPtr aStopper);
 
 	TaskPtr Produce() const override;
 

@@ -7,9 +7,17 @@
 
 struct Synchronizer
 {
-	Synchronizer(IStopperPtr aStopper);
+public:
+	explicit Synchronizer(IStopperPtr aStopper);
+
+	void EnqueueTask(TaskPtr&& aTask);
+	TaskQueue GetQueue();
+
+	void Wait();
 
 	void Stop();
+
+	bool IsStopped() const;
 
 	TaskQueue mQueue;
 	ConditionVariable mCondition;

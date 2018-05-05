@@ -3,7 +3,7 @@
 class Consumer : public IConsumer
 {
 public:
-	Consumer(IStopperPtr aStopper);
+	explicit Consumer(IStopperPtr aStopper);
 
 	void Consume(TaskPtr&& aTask) override;
 

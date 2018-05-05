@@ -6,7 +6,7 @@
 class ApiWrapper
 {
 public:
-	ApiWrapper(bool result);
+	explicit ApiWrapper(bool result);
 
 private:
 	static std::string GetLastErrorAsString();

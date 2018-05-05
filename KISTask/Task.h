@@ -6,7 +6,7 @@
 
 struct Task
 {
-	Task(Original::Request* aRequest)
+	explicit Task(Original::Request* aRequest)
 		: mRequest(aRequest)
 	{
 	}
