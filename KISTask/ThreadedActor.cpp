@@ -23,7 +23,7 @@ void ThreadedActor::Start()
 	{
 		std::stringstream name;
 		name << mThreadPrefix << i;
-		mThreads.emplace_back(std::thread(ThreadProc, this, name.str()));
+		mThreads.emplace_back(ThreadProc, this, name.str());
 	}
 	mIsRunning = true;
 }
