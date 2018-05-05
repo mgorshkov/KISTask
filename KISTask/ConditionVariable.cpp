@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "ApiWrapper.h"
-#include "ConditionVariable.h"
 
 ConditionVariable::ConditionVariable()
 {

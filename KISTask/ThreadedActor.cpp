@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <sstream>
-#include "ThreadedActor.h"
 
 ThreadedActor::ThreadedActor(Synchronizer& aSynchronizer, const std::string& aThreadPrefix, int aThreadCount)
 	: mSynchronizer(aSynchronizer)

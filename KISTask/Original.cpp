@@ -4,8 +4,6 @@
 #include <numeric>
 #include <vector>
 
-#include "original.h"
-
 namespace Original
 {
 	Request* GetRequest(Stopper stopSignal)
