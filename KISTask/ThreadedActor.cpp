@@ -46,7 +46,7 @@ void ThreadedActor::ThreadProc(ThreadedActor* aThis, const std::string& aThreadP
 		aThis->Run();
 		std::cout << "Thread " << aThreadPrefix << " stopped." << std::endl;
 	}
-	catch (const std::exception &e)
+	catch (const std::exception& e)
 	{
 		std::cout << "Thread " << aThreadPrefix << " failed." << std::endl;
 		std::cerr << e.what() << std::endl;
