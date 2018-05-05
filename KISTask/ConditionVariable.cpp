@@ -17,9 +17,7 @@ void ConditionVariable::NotifyAll()
 	ApiWrapper(SetEvent(mEvent));
 }
 
-bool ConditionVariable::Wait()
+void ConditionVariable::Wait()
 {
-	DWORD res = WaitForSingleObject(mEvent, INFINITE);
-	ApiWrapper(res != WAIT_FAILED);
-	return WAIT_OBJECT_0 == res;
+	ApiWrapper(WAIT_FAILED != WaitForSingleObject(mEvent, INFINITE));
 }

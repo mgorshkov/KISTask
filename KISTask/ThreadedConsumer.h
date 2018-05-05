@@ -20,7 +20,8 @@ protected:
 		while (!mSynchronizer.IsStopped())
 		{
 			mSynchronizer.Wait();
-			ProcessQueue(dependentConsumer);
+			if (!mSynchronizer.IsStopped())
+				ProcessQueue(dependentConsumer);
 		}
 	}
 

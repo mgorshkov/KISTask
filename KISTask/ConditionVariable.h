@@ -14,7 +14,7 @@ public:
 
 	void NotifyAll();
 
-	bool Wait();
+	void Wait();
 
 private:
 	HANDLE mEvent;
