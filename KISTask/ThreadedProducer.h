@@ -17,7 +17,7 @@ protected:
 		while (!mSynchronizer.mStopper->IsStopped())
 		{
 			TaskPtr task = dependentProducer.Produce();
-			if (task == nullptr)
+			if (!task->IsValid())
 				break; // stop has been detected inside producer
 
 			mSynchronizer.EnqueueTask(std::move(task));

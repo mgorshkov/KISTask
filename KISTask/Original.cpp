@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <algorithm>
+#include <iostream>
 #include <numeric>
 #include <vector>
 
@@ -19,7 +20,9 @@ namespace Original
 				return nullptr;
 			std::random_shuffle(v.begin(), v.end());
 		}
-		return new Request{};
+		auto request = new Request{};
+		std::cout << "GetRequest: " << request << std::endl;
+		return request;
 	}
 
 	void ProcessRequest(Request* request, Stopper stopSignal)
@@ -35,10 +38,12 @@ namespace Original
 				return;
 			std::random_shuffle(v.begin(), v.end());
 		}
+		std::cout << "ProcessRequest: " << request << std::endl;
 	}
 
 	void DeleteRequest(Request* request)
 	{
+		std::cout << "DeleteRequest: " << request << std::endl;
 		delete request;
 	}
 }
