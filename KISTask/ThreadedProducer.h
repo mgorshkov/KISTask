@@ -14,7 +14,7 @@ protected:
 	void Run() override
 	{
 		DependentProducer dependentProducer(mSynchronizer.mStopper);
-		while (!mSynchronizer.mStopper->IsStopped())
+		while (!mSynchronizer.IsStopped())
 		{
 			TaskPtr task = dependentProducer.Produce();
 			if (!task->IsValid())

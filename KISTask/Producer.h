@@ -1,5 +1,9 @@
 #pragma once
 
+#include "IProducer.h"
+#include "IStopper.h"
+#include "Task.h"
+
 class Producer : public IProducer
 {
 public:

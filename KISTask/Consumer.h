@@ -1,5 +1,9 @@
 #pragma once
 
+#include "IConsumer.h"
+#include "IStopper.h"
+#include "Task.h"
+
 class Consumer : public IConsumer
 {
 public:

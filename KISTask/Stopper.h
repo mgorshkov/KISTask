@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-#include "istopper.h"
+#include "IStopper.h"
 
 class Stopper : public IStopper
 {
