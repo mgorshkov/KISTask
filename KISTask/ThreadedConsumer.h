@@ -1,8 +1,5 @@
 #pragma once
 
-#include "UniqueLock.h"
-#include "Mutex.h"
-
 template <typename DependentConsumer>
 class ThreadedConsumer : public ThreadedActor
 {
