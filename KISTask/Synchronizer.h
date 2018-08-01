@@ -11,9 +11,9 @@ public:
 	explicit Synchronizer(IStopperPtr aStopper);
 
 	void EnqueueTask(TaskPtr&& aTask);
-	TaskQueue GetQueue();
+	TaskPtr GetQueueElement();
 
-	void Wait();
+	void Wait(Mutex& aMutex);
 
 	void Stop();
 

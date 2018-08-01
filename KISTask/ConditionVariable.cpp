@@ -2,20 +2,54 @@
 
 ConditionVariable::ConditionVariable()
 {
-	ApiWrapper((mEvent = CreateEvent(NULL, FALSE, FALSE, NULL)) != NULL);
+	mEvents[ModeSignal] = CreateEvent(NULL, FALSE, FALSE, NULL);
+	mEvents[ModeBroadcast] = CreateEvent(NULL, TRUE, FALSE, NULL);
 }
 
 ConditionVariable::~ConditionVariable()
 {
-	CloseHandle(mEvent);
+	CloseHandle(mEvents[ModeSignal]);
+	CloseHandle(mEvents[ModeBroadcast]);
 }
 
-void ConditionVariable::NotifyAll()
+void ConditionVariable::Signal()
 {
-	ApiWrapper(SetEvent(mEvent));
+	mWaitersCountMutex.Lock();
+	int haveWaiters = mWaitersCount > 0;
+	mWaitersCountMutex.Unlock();
+
+	if (haveWaiters)
+		ApiWrapper(SetEvent(mEvents[ModeBroadcast]));
 }
 
-void ConditionVariable::Wait()
+void ConditionVariable::Broadcast()
 {
-	ApiWrapper(WAIT_FAILED != WaitForSingleObject(mEvent, INFINITE));
+	mWaitersCountMutex.Lock();
+	int haveWaiters = mWaitersCount > 0;
+	mWaitersCountMutex.Unlock();
+
+	if (haveWaiters)
+		ApiWrapper(SetEvent(mEvents[ModeBroadcast]));
+}
+
+void ConditionVariable::Wait(Mutex& aExternalMutex)
+{
+	mWaitersCountMutex.Lock();
+	mWaitersCount++;
+	mWaitersCountMutex.Unlock();
+
+	aExternalMutex.Unlock();
+	int result = WaitForMultipleObjects(2, mEvents, FALSE, INFINITE);
+	mWaitersCountMutex.Lock();
+
+	mWaitersCount--;
+	int lastWaiter =
+		result == WAIT_OBJECT_0 + ModeBroadcast
+		&& mWaitersCount == 0;
+	mWaitersCountMutex.Unlock();
+
+	if (lastWaiter)
+		ResetEvent(mEvents[ModeBroadcast]);
+
+	aExternalMutex.Lock();
 }

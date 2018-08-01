@@ -21,6 +21,8 @@ protected:
 				break; // stop has been detected inside producer
 
 			mSynchronizer.EnqueueTask(std::move(task));
+
+			Sleep(10);
 		}
 	}
 };

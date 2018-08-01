@@ -16,20 +16,19 @@ protected:
 		DependentConsumer dependentConsumer(mSynchronizer.mStopper);
 		while (!mSynchronizer.IsStopped())
 		{
-			mSynchronizer.Wait();
+			Mutex mutex;
+			UniqueLock<Mutex> lock(mutex);
+			mSynchronizer.Wait(mutex);
 			if (!mSynchronizer.IsStopped())
-				ProcessQueue(dependentConsumer);
+				ProcessElement(dependentConsumer);
 		}
 	}
 
-	void ProcessQueue(IConsumer& aDependentConsumer)
+	void ProcessElement(IConsumer& aDependentConsumer)
 	{
-		TaskQueue queue = mSynchronizer.GetQueue();
-		while (!queue.empty())
-		{
-			aDependentConsumer.Consume(std::move(queue.front()));
-			queue.pop();
-		}
+		auto element = mSynchronizer.GetQueueElement();
+		if (element)
+			aDependentConsumer.Consume(std::move(element));
 	}
 };
 

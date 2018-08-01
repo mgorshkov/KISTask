@@ -11,26 +11,28 @@ void Synchronizer::EnqueueTask(TaskPtr&& aTask)
 		UniqueLock<Mutex> lk(mQueueMutex);
 		mQueue.emplace(std::move(aTask));
 	}
-	mCondition.NotifyAll();
+	mCondition.Broadcast();
 }
 
-TaskQueue Synchronizer::GetQueue()
+TaskPtr Synchronizer::GetQueueElement()
 {
-	TaskQueue queue;
 	UniqueLock<Mutex> lk(mQueueMutex);
-	std::swap(mQueue, queue);
-	return queue;
+	if (mQueue.empty())
+		return nullptr;
+	auto element = std::move(mQueue.front());
+	mQueue.pop();
+	return std::move(element);
 }
 
-void Synchronizer::Wait()
+void Synchronizer::Wait(Mutex& aMutex)
 {
-	mCondition.Wait();
+	mCondition.Wait(aMutex);
 }
 
 void Synchronizer::Stop()
 {
 	mStopper->Stop();
-	mCondition.NotifyAll();
+	mCondition.Broadcast();
 }
 
 bool Synchronizer::IsStopped() const
